@@ -1,11 +1,13 @@
 import User from "../models/user.mode.js";
 import bcrypt from "bcryptjs";
+import { errorHandler } from "../utils/error.js";
 
-export const signup = async (req, res) => {
+export const signup = async (req, res,next) => {
   console.log(req.body);
 
   const { username, email, password } = req.body;
   const hashedPassword = bcrypt.hashSync(password, 10);
+
 
   const newUser = new User({ username, email, password: hashedPassword });
   try {
@@ -14,6 +16,7 @@ export const signup = async (req, res) => {
     res.status(201).json("User created successfull!");
 
   } catch (error) {
-     res.status(500).json(error.message);
+     next(error)
   }
+ 
 };
